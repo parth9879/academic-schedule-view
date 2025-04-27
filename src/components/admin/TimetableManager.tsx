@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -228,8 +227,21 @@ const TimetableManager = () => {
     setSubjectId(timetable.subjectId);
     setRoomId(timetable.roomId);
     setDay(timetable.day);
-    setTimeStart(timetable.timeStart);
-    setTimeEnd(timetable.timeEnd);
+    
+    if (timeSlots.includes(timetable.timeStart as any)) {
+      setTimeStart(timetable.timeStart as typeof timeSlots[number]);
+    } else {
+      setTimeStart('');
+      console.warn(`Invalid timeStart value: ${timetable.timeStart}`);
+    }
+    
+    if (timeSlots.includes(timetable.timeEnd as any)) {
+      setTimeEnd(timetable.timeEnd as typeof timeSlots[number]);
+    } else {
+      setTimeEnd('');
+      console.warn(`Invalid timeEnd value: ${timetable.timeEnd}`);
+    }
+    
     setIsAddingTimetable(false);
   };
   
@@ -258,7 +270,6 @@ const TimetableManager = () => {
 
   const [selectedCourseFilter, setSelectedCourseFilter] = useState('');
   
-  // Filter timetables based on selected course
   const filteredTimetables = selectedCourseFilter
     ? timetables.filter(entry => 
         MOCK_SUBJECTS.some(
@@ -292,7 +303,6 @@ const TimetableManager = () => {
                   <Label htmlFor="course">Course</Label>
                   <Select 
                     onValueChange={(value) => {
-                      // Reset subject when course changes
                       setSubjectId('');
                     }}
                   >
